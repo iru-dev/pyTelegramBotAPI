@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+
 # -*- coding: utf-8 -*-
 
+
 # This example shows webhook echo bot with Tornado web framework
+
 # Documenation to Tornado: http://tornadoweb.org
 
 import signal
@@ -21,12 +24,17 @@ WEBHOOK_SECRET = "<secret_uri_for_updates"
 WEBHOOK_PORT = 88
 WEBHOOK_URL_BASE = "https://{0}:{1}/{2}".format(WEBHOOK_HOST, str(WEBHOOK_PORT), WEBHOOK_SECRET)
 
+
 # Quick'n'dirty SSL certificate generation:
 #
+
 # openssl genrsa -out pkey.pem 2048
+
 # openssl req -new -x509 -days 3650 -key pkey.pem -out cert.pem
 #
+
 # When asked for "Common Name (e.g. server FQDN or YOUR name)" you should reply
+
 # with the same value in you put in WEBHOOK_HOST
 
 bot = telebot.TeleBot(API_TOKEN)
@@ -48,7 +56,8 @@ class webhook_serv(tornado.web.RequestHandler):
             "Content-Type" in self.request.headers and \
             self.request.headers['Content-Type'] == "application/json":
 
-            # length = int(self.request.headers['Content-Length'])
+            
+# length = int(self.request.headers['Content-Length'])
             json_data = self.request.body.decode("utf-8")
             update = telebot.types.Update.de_json(json_data)
             bot.process_new_updates([update])
@@ -72,9 +81,11 @@ def signal_handler(signum, frame):
 def try_exit():
     global is_closing
     if is_closing:
-        # clean up here
+        
+# clean up here
         tornado.ioloop.IOLoop.instance().stop()
         print("Exit success!")
+
 
 
 # Handle '/start' and '/help'

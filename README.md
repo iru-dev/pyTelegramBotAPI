@@ -1,3 +1,4 @@
+
 # <p align="center">pyTelegramBotAPI
 
 <p align="center">A simple, but extensible Python implementation for the <a href="https://core.telegram.org/bots/api">Telegram Bot API</a>.
@@ -39,7 +40,8 @@
   * [More examples](#more-examples)
   * [Bots using this API](#bots-using-this-api)
 
-## Getting started.
+#
+# Getting started.
 
 This API is tested with Python Python 3.6-3.9 and Pypy 3.
 There are two ways to install the library:
@@ -61,14 +63,17 @@ It is generally recommended to use the first option.
 
 **While the API is production-ready, it is still under development and it has regular updates, do not forget to update it regularly by calling `pip install pytelegrambotapi --upgrade`*
 
-## Writing your first bot
+#
+# Writing your first bot
 
-### Prerequisites
+##
+# Prerequisites
 
 It is presumed that you [have obtained an API token with @BotFather](https://core.telegram.org/bots#botfather). We will call this token `TOKEN`.
 Furthermore, you have basic knowledge of the Python programming language and more importantly [the Telegram Bot API](https://core.telegram.org/bots/api).
 
-### A simple echo bot
+##
+# A simple echo bot
 
 The TeleBot class (defined in \__init__.py) encapsulates all API calls in a single class. It provides functions such as `send_xyz` (`send_message`, `send_document` etc.) and several ways to listen for incoming messages.
 
@@ -77,7 +82,8 @@ Then, open the file and create an instance of the TeleBot class.
 ```python
 import telebot
 
-bot = telebot.TeleBot("TOKEN", parse_mode=None) # You can set parse_mode by default. HTML or MARKDOWN
+bot = telebot.TeleBot("TOKEN", parse_mode=None) 
+# You can set parse_mode by default. HTML or MARKDOWN
 ```
 *Note: Make sure to actually replace TOKEN with your own API token.*
 
@@ -123,9 +129,11 @@ bot.polling()
 ```
 To start the bot, simply open up a terminal and enter `python echo_bot.py` to run the bot! Test it by sending commands ('/start' and '/help') and arbitrary text messages.
 
-## General API Documentation
+#
+# General API Documentation
 
-### Types
+##
+# Types
 
 All types are defined in types.py. They are all completely in line with the [Telegram API's definition of the types](https://core.telegram.org/bots/api#available-types), except for the Message's `from` field, which is renamed to `from_user` (because `from` is a Python reserved token). Thus, attributes such as `message_id` can be accessed directly with `message.message_id`. Note that `message.chat` can be either an instance of `User` or `GroupChat` (see [How can I distinguish a User and a GroupChat in message.chat?](#how-can-i-distinguish-a-user-and-a-groupchat-in-messagechat)).
 
@@ -136,15 +144,18 @@ You can use some types in one function. Example:
 
 ```content_types=["text", "sticker", "pinned_message", "photo", "audio"]```
 
-### Methods
+##
+# Methods
 
 All [API methods](https://core.telegram.org/bots/api#available-methods) are located in the TeleBot class. They are renamed to follow common Python naming conventions. E.g. `getMe` is renamed to `get_me` and `sendMessage` to `send_message`.
 
-### General use of the API
+##
+# General use of the API
 
 Outlined below are some general use cases of the API.
 
-#### Message handlers
+###
+# Message handlers
 A message handler is a function that is decorated with the `message_handler` decorator of a TeleBot instance. Message handlers consist of one or multiple filters.
 Each filter much return True for a certain message in order for a message handler to become eligible to handle that message. A message handler is declared in the following way (provided `bot` is an instance of TeleBot):
 ```python
@@ -170,25 +181,30 @@ Here are some examples of using the filters and message handlers:
 import telebot
 bot = telebot.TeleBot("TOKEN")
 
+
 # Handles all text messages that contains the commands '/start' or '/help'.
 @bot.message_handler(commands=['start', 'help'])
 def handle_start_help(message):
 	pass
+
 
 # Handles all sent documents and audio files
 @bot.message_handler(content_types=['document', 'audio'])
 def handle_docs_audio(message):
 	pass
 
+
 # Handles all text messages that match the regular expression
 @bot.message_handler(regexp="SOME_REGEXP")
 def handle_message(message):
 	pass
 
+
 # Handles all messages for which the lambda returns True
 @bot.message_handler(func=lambda message: message.document.mime_type == 'text/plain', content_types=['document'])
 def handle_text_doc(message):
 	pass
+
 
 # Which could also be defined as:
 def test_message(message):
@@ -198,7 +214,9 @@ def test_message(message):
 def handle_text_doc(message):
 	pass
 
+
 # Handlers can be stacked to create a function which will be called if either message_handler is eligible
+
 # This handler will be called if the message starts with '/hello' OR is some emoji
 @bot.message_handler(commands=['hello'])
 @bot.message_handler(func=lambda msg: msg.text.encode("utf-8") == SOME_FANCY_EMOJI)
@@ -207,19 +225,23 @@ def send_something(message):
 ```
 **Important: all handlers are tested in the order in which they were declared**
 
-#### Edited Message handlers
+###
+# Edited Message handlers
 
 @bot.edited_message_handler(filters)
 
-#### channel_post_handler
+###
+# channel_post_handler
 
 @bot.channel_post_handler(filters)
 
-#### edited_channel_post_handler
+###
+# edited_channel_post_handler
 
 @bot.edited_channel_post_handler(filters)
 
-#### Callback Query Handler
+###
+# Callback Query Handler
 
 In bot2.0 update. You can get `callback_query` in update object. In telebot use `callback_query_handler` to process callback queries.
 
@@ -228,7 +250,8 @@ In bot2.0 update. You can get `callback_query` in update object. In telebot use 
 def  test_callback(call):
     logger.info(call)
 ```
-#### Middleware Handler
+###
+# Middleware Handler
 
 A middleware handler is a function that allows you to modify requests or the bot context as they pass through the 
 Telegram to the bot. You can imagine middleware as a chain of logic connection handled before any other handlers are
@@ -239,100 +262,131 @@ apihelper.ENABLE_MIDDLEWARE = True
 
 @bot.middleware_handler(update_types=['message'])
 def modify_message(bot_instance, message):
-    # modifying the message before it reaches any other handler 
+    
+# modifying the message before it reaches any other handler 
     message.another_text = message.text + ':changed'
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    # the message is already modified when it reaches message handler
+    
+# the message is already modified when it reaches message handler
     assert message.another_text == message.text + ':changed'
 ```
 There are other examples using middleware handler in the [examples/middleware](examples/middleware) directory.
 
-#### TeleBot
+###
+# TeleBot
 ```python
 import telebot
 
 TOKEN = '<token_string>'
 tb = telebot.TeleBot(TOKEN)	#create a new Telegram Bot object
 
+
 # Upon calling this function, TeleBot starts polling the Telegram servers for new messages.
+
 # - none_stop: True/False (default False) - Don't stop polling when receiving an error from the Telegram servers
+
 # - interval: True/False (default False) - The interval between polling requests
+
 #           Note: Editing this parameter harms the bot's response time
+
 # - timeout: integer (default 20) - Timeout in seconds for long polling.
 tb.polling(none_stop=False, interval=0, timeout=20)
+
 
 # getMe
 user = tb.get_me()
 
+
 # setWebhook
 tb.set_webhook(url="http://example.com", certificate=open('mycert.pem'))
+
 # unset webhook
 tb.remove_webhook()
+
 
 # getUpdates
 updates = tb.get_updates()
 updates = tb.get_updates(1234,100,20) #get_Updates(offset, limit, timeout):
 
+
 # sendMessage
 tb.send_message(chat_id, text)
+
 
 # editMessageText
 tb.edit_message_text(new_text, chat_id, message_id)
 
+
 # forwardMessage
 tb.forward_message(to_chat_id, from_chat_id, message_id)
 
+
 # All send_xyz functions which can take a file as an argument, can also take a file_id instead of a file.
+
 # sendPhoto
 photo = open('/tmp/photo.png', 'rb')
 tb.send_photo(chat_id, photo)
 tb.send_photo(chat_id, "FILEID")
+
 
 # sendAudio
 audio = open('/tmp/audio.mp3', 'rb')
 tb.send_audio(chat_id, audio)
 tb.send_audio(chat_id, "FILEID")
 
-## sendAudio with duration, performer and title.
+#
+# sendAudio with duration, performer and title.
 tb.send_audio(CHAT_ID, file_data, 1, 'eternnoir', 'pyTelegram')
+
 
 # sendVoice
 voice = open('/tmp/voice.ogg', 'rb')
 tb.send_voice(chat_id, voice)
 tb.send_voice(chat_id, "FILEID")
 
+
 # sendDocument
 doc = open('/tmp/file.txt', 'rb')
 tb.send_document(chat_id, doc)
 tb.send_document(chat_id, "FILEID")
+
 
 # sendSticker
 sti = open('/tmp/sti.webp', 'rb')
 tb.send_sticker(chat_id, sti)
 tb.send_sticker(chat_id, "FILEID")
 
+
 # sendVideo
 video = open('/tmp/video.mp4', 'rb')
 tb.send_video(chat_id, video)
 tb.send_video(chat_id, "FILEID")
+
 
 # sendVideoNote
 videonote = open('/tmp/videonote.mp4', 'rb')
 tb.send_video_note(chat_id, videonote)
 tb.send_video_note(chat_id, "FILEID")
 
+
 # sendLocation
 tb.send_location(chat_id, lat, lon)
 
+
 # sendChatAction
+
 # action_string can be one of the following strings: 'typing', 'upload_photo', 'record_video', 'upload_video',
+
 # 'record_audio', 'upload_audio', 'upload_document' or 'find_location'.
 tb.send_chat_action(chat_id, action_string)
 
+
 # getFile
+
 # Downloading a file is straightforward
+
 # Returns a File object
 import requests
 file_info = tb.get_file(file_id)
@@ -341,19 +395,28 @@ file = requests.get('https://api.telegram.org/file/bot{0}/{1}'.format(API_TOKEN,
 
 
 ```
-#### Reply markup
+###
+# Reply markup
 All `send_xyz` functions of TeleBot take an optional `reply_markup` argument. This argument must be an instance of `ReplyKeyboardMarkup`, `ReplyKeyboardRemove` or `ForceReply`, which are defined in types.py.
 
 ```python
 from telebot import types
 
+
 # Using the ReplyKeyboardMarkup class
+
 # It's constructor can take the following optional arguments:
+
 # - resize_keyboard: True/False (default False)
+
 # - one_time_keyboard: True/False (default False)
+
 # - selective: True/False (default False)
+
 # - row_width: integer (default 3)
+
 # row_width is used in combination with the add() function.
+
 # It defines how many buttons are fit on each row before continuing on the next row.
 markup = types.ReplyKeyboardMarkup(row_width=2)
 itembtn1 = types.KeyboardButton('a')
@@ -361,6 +424,7 @@ itembtn2 = types.KeyboardButton('v')
 itembtn3 = types.KeyboardButton('d')
 markup.add(itembtn1, itembtn2, itembtn3)
 tb.send_message(chat_id, "Choose one letter:", reply_markup=markup)
+
 
 # or add KeyboardButton one row at a time:
 markup = types.ReplyKeyboardMarkup()
@@ -378,14 +442,18 @@ The last example yields this result:
 ![ReplyKeyboardMarkup](https://farm3.staticflickr.com/2933/32418726704_9ef76093cf_o_d.jpg "ReplyKeyboardMarkup")
 
 ```python
+
 # ReplyKeyboardRemove: hides a previously sent ReplyKeyboardMarkup
+
 # Takes an optional selective argument (True/False, default False)
 markup = types.ReplyKeyboardRemove(selective=False)
 tb.send_message(chat_id, message, reply_markup=markup)
 ```
 
 ```python
+
 # ForceReply: forces a user to reply to a message
+
 # Takes an optional selective argument (True/False, default False)
 markup = types.ForceReply(selective=False)
 tb.send_message(chat_id, "Send me another word:", reply_markup=markup)
@@ -394,11 +462,13 @@ ForceReply:
 
 ![ForceReply](https://farm4.staticflickr.com/3809/32418726814_d1baec0fc2_o_d.jpg "ForceReply")
 
-### Inline Mode
+##
+# Inline Mode
 
 More information about [Inline mode](https://core.telegram.org/bots/inline).
 
-#### inline_handler
+###
+# inline_handler
 
 Now, you can use inline_handler to get inline queries in telebot.
 
@@ -406,11 +476,13 @@ Now, you can use inline_handler to get inline queries in telebot.
 
 @bot.inline_handler(lambda query: query.query == 'text')
 def query_text(inline_query):
-    # Query message is text
+    
+# Query message is text
 ```
 
 
-#### chosen_inline_handler
+###
+# chosen_inline_handler
 
 Use chosen_inline_handler to get chosen_inline_result in telebot. Don't forgot add the /setinlinefeedback
 command for @Botfather.
@@ -420,10 +492,12 @@ More information : [collecting-feedback](https://core.telegram.org/bots/inline#c
 ```python
 @bot.chosen_inline_handler(func=lambda chosen_inline_result: True)
 def test_chosen(chosen_inline_result):
-    # Process all chosen_inline_result.
+    
+# Process all chosen_inline_result.
 ```
 
-#### answer_inline_query
+###
+# answer_inline_query
 
 ```python
 @bot.inline_handler(lambda query: query.query == 'text')
@@ -436,7 +510,8 @@ def query_text(inline_query):
         print(e)
 
 ```
-### Working with entities:
+##
+# Working with entities:
 This object represents one special entity in a text message. For example, hashtags, usernames, URLs, etc.
 Attributes:
 * `type`
@@ -452,9 +527,11 @@ Here `num` is the entity number or order of entity in a reply, for if incase the
 `message.entities[0].type` would give the type of the first entity<br>
 Refer [Bot Api](https://core.telegram.org/bots/api#messageentity) for extra details
 
-## Advanced use of the API
+#
+# Advanced use of the API
 
-### Asynchronous delivery of messages
+##
+# Asynchronous delivery of messages
 There exists an implementation of TeleBot which executes all `send_xyz` and the `get_me` functions asynchronously. This can speed up you bot __significantly__, but it has unwanted side effects if used without caution.
 To enable this behaviour, create an instance of AsyncTeleBot instead of TeleBot.
 ```python
@@ -465,35 +542,43 @@ Now, every function that calls the Telegram API is executed in a separate Thread
 import telebot
 
 tb = telebot.AsyncTeleBot("TOKEN")
-task = tb.get_me() # Execute an API call
+task = tb.get_me() 
+# Execute an API call
+
 # Do some other operations...
 a = 0
 for a in range(100):
 	a += 10
 
-result = task.wait() # Get the result of the execution
+result = task.wait() 
+# Get the result of the execution
 ```
 *Note: if you execute send_xyz functions after eachother without calling wait(), the order in which messages are delivered might be wrong.*
 
-### Sending large text messages
+##
+# Sending large text messages
 Sometimes you must send messages that exceed 5000 characters. The Telegram API can not handle that many characters in one request, so we need to split the message in multiples. Here is how to do that using the API:
 ```python
 from telebot import util
 large_text = open("large_text.txt", "rb").read()
 
+
 # Split the text each 3000 characters.
+
 # split_string returns a list with the splitted text.
 splitted_text = util.split_string(large_text, 3000)
 for text in splitted_text:
 	tb.send_message(chat_id, text)
 ```
-### Controlling the amount of Threads used by TeleBot
+##
+# Controlling the amount of Threads used by TeleBot
 The TeleBot constructor takes the following optional arguments:
 
  - threaded: True/False (default True). A flag to indicate whether
    TeleBot should execute message handlers on it's polling Thread.
 
-### The listener mechanism
+##
+# The listener mechanism
 As an alternative to the message handlers, one can also register a function as a listener to TeleBot.
 
 NOTICE: handlers won't disappear! Your message will be processed both by handlers and listeners. Also, it's impossible to predict which will work at first because of threading. If you use threaded=False, custom listeners will work earlier, after them handlers will be called. 
@@ -501,19 +586,22 @@ Example:
 ```python
 def handle_messages(messages):
 	for message in messages:
-		# Do something with the message
+		
+# Do something with the message
 		bot.reply_to(message, 'Hi')
 
 bot.set_update_listener(handle_messages)
 bot.polling()
 ```
 
-### Using web hooks
+##
+# Using web hooks
 When using webhooks telegram sends one Update per call, for processing it you should call process_new_messages([update.message]) when you recieve it.
 
 There are some examples using webhooks in the [examples/webhook_examples](examples/webhook_examples) directory.
 
-### Logging
+##
+# Logging
 
 You can use the Telebot module logger to log debug info about Telebot. Use `telebot.logger` to get the logger of the TeleBot module.
 It is possible to add custom logging Handlers to the logger. Refer to the [Python logging module page](https://docs.python.org/2/library/logging.html) for more info.
@@ -522,10 +610,12 @@ It is possible to add custom logging Handlers to the logger. Refer to the [Pytho
 import logging
 
 logger = telebot.logger
-telebot.logger.setLevel(logging.DEBUG) # Outputs debug messages to console.
+telebot.logger.setLevel(logging.DEBUG) 
+# Outputs debug messages to console.
 ```
 
-### Proxy
+##
+# Proxy
 
 You can use proxy for request. `apihelper.proxy` object will use by call `requests` proxies argument.
 
@@ -542,7 +632,8 @@ apihelper.proxy = {'https':'socks5://userproxy:password@proxy_address:port'}
 ```
 
 
-## API conformance
+#
+# API conformance
 
 _Checking is in progress..._
 
@@ -567,7 +658,8 @@ _Checking is in progress..._
 * ✔ [Bot API 2.0](https://core.telegram.org/bots/api-changelog#april-9-2016) 
 
 
-## Change log
+#
+# Change log
 
 27.04.2020 - Poll and Dice are up to date.
 Python2 conformance is not checked any more due to EOL. 
@@ -576,52 +668,63 @@ Python2 conformance is not checked any more due to EOL.
 
 06.06.2019 - Added polls support (Poll). Added functions send_poll, stop_poll
 
-## F.A.Q.
+#
+# F.A.Q.
 
-### Bot 2.0
+##
+# Bot 2.0
 
 April 9,2016 Telegram release new bot 2.0 API, which has a drastic revision especially for the change of method's interface.If you want to update to the latest version, please make sure you've switched bot's code to bot 2.0 method interface.
 
 [More information about pyTelegramBotAPI support bot2.0](https://github.com/eternnoir/pyTelegramBotAPI/issues/130)
 
-### How can I distinguish a User and a GroupChat in message.chat?
+##
+# How can I distinguish a User and a GroupChat in message.chat?
 Telegram Bot API support new type Chat for message.chat.
 
 - Check the ```type``` attribute in ```Chat``` object:
 -
 ```python
 if message.chat.type == "private":
-	# private chat message
+	
+# private chat message
 
 if message.chat.type == "group":
-	# group chat message
+	
+# group chat message
 
 if message.chat.type == "supergroup":
-	# supergroup chat message
+	
+# supergroup chat message
 
 if message.chat.type == "channel":
-	# channel message
+	
+# channel message
 
 ```
 
-### How can I handle reocurring ConnectionResetErrors?
+##
+# How can I handle reocurring ConnectionResetErrors?
 
 Bot instances that were idle for a long time might be rejected by the server when sending a message due to a timeout of the last used session. Add `apihelper.SESSION_TIME_TO_LIVE = 5 * 60` to your initialisation to force recreation after 5 minutes without any activity. 
 
-## The Telegram Chat Group
+#
+# The Telegram Chat Group
 
 Get help. Discuss. Chat.
 
 * Join the [pyTelegramBotAPI Telegram Chat Group](https://telegram.me/joinchat/Bn4ixj84FIZVkwhk2jag6A)
 * We now have a Telegram Channel as well! Keep yourself up to date with API changes, and [join it](https://telegram.me/pytelegrambotapi).
 
-## More examples
+#
+# More examples
 
 * [Echo Bot](https://github.com/eternnoir/pyTelegramBotAPI/blob/master/examples/echo_bot.py)
 * [Deep Linking](https://github.com/eternnoir/pyTelegramBotAPI/blob/master/examples/deep_linking.py)
 * [next_step_handler Example](https://github.com/eternnoir/pyTelegramBotAPI/blob/master/examples/step_example.py)
 
-## Bots using this API
+#
+# Bots using this API
 * [SiteAlert bot](https://telegram.me/SiteAlert_bot) ([source](https://github.com/ilteoood/SiteAlert-Python)) by *ilteoood* - Monitors websites and sends a notification on changes
 * [TelegramLoggingBot](https://github.com/aRandomStranger/TelegramLoggingBot) by *aRandomStranger*
 * [Send to Kindle Bot](https://telegram.me/Send2KindleBot) by *GabrielRF* - Send to Kindle files or links to files.

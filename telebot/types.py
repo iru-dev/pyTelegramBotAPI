@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import logging
@@ -237,7 +238,8 @@ class Chat(JsonDeserializable):
         sticker_set_name = obj.get('sticker_set_name')
         can_set_sticker_set = obj.get('can_set_sticker_set')
         linked_chat_id = obj.get('linked_chat_id')
-        location = None # Not implemented
+        location = None 
+# Not implemented
         return cls(
             id, type, title, username, first_name, last_name,
             photo, bio, description, invite_link,
@@ -326,7 +328,8 @@ class Message(JsonDeserializable):
             opts['document'] = Document.de_json(obj['document'])
             content_type = 'document'
         if 'animation' in obj:
-            # Document content type accompanies "animation", so "animation" should be checked below "document" to override it
+            
+# Document content type accompanies "animation", so "animation" should be checked below "document" to override it
             opts['animation'] = Animation.de_json(obj['animation'])
             content_type = 'animation'
         if 'game' in obj:
@@ -439,7 +442,8 @@ class Message(JsonDeserializable):
 
     def __init__(self, message_id, from_user, date, chat, content_type, options, json_string):
         self.content_type = content_type
-        self.id = message_id           # Lets fix the telegram usability ####up with ID in Message :)
+        self.id = message_id           
+# Lets fix the telegram usability ####up with ID in Message :)
         self.message_id = message_id
         self.from_user = from_user
         self.date = date
@@ -470,7 +474,8 @@ class Message(JsonDeserializable):
         self.venue = None
         self.animation = None
         self.dice = None
-        self.new_chat_member = None  # Deprecated since Bot API 3.0. Not processed anymore
+        self.new_chat_member = None  
+# Deprecated since Bot API 3.0. Not processed anymore
         self.new_chat_members = None
         self.left_chat_member = None
         self.new_chat_title = None
@@ -516,7 +521,8 @@ class Message(JsonDeserializable):
             "italic"   : "<i>{text}</i>",
             "pre"      : "<pre>{text}</pre>",
             "code"     : "<code>{text}</code>",
-            #"url"      : "<a href=\"{url}\">{text}</a>", # @badiboy plain URLs have no text and do not need tags
+            #"url"      : "<a href=\"{url}\">{text}</a>", 
+# @badiboy plain URLs have no text and do not need tags
             "text_link": "<a href=\"{url}\">{text}</a>",
             "strikethrough": "<s>{text}</s>",
             "underline":     "<u>{text}</u>"
@@ -552,8 +558,10 @@ class Message(JsonDeserializable):
                 html_text += func(utf16_text[offset * 2 : (offset + entity.length) * 2], entity.type, entity.url, entity.user)
                 offset += entity.length
             else:
-                # TODO: process nested entities from Bot API 4.5
-                # Now ignoring them
+                
+# TODO: process nested entities from Bot API 4.5
+                
+# Now ignoring them
                 pass
         if offset * 2 < len(utf16_text):
             html_text += func(utf16_text[offset * 2:])
@@ -878,7 +886,8 @@ class ReplyKeyboardMarkup(JsonSerializable):
 
     def __init__(self, resize_keyboard=None, one_time_keyboard=None, selective=None, row_width=3):
         if row_width > self.max_row_keys:
-            # Todo: Will be replaced with Exception in future releases
+            
+# Todo: Will be replaced with Exception in future releases
             if not DISABLE_KEYLEN_ERROR:
                 logger.error('Telegram does not support reply keyboard row width over %d.' % self.max_row_keys)
             row_width = self.max_row_keys
@@ -905,7 +914,8 @@ class ReplyKeyboardMarkup(JsonSerializable):
         
         
         if row_width > self.max_row_keys:
-            # Todo: Will be replaced with Exception in future releases
+            
+# Todo: Will be replaced with Exception in future releases
             if not DISABLE_KEYLEN_ERROR:
                 logger.error('Telegram does not support reply keyboard row width over %d.' % self.max_row_keys)
             row_width = self.max_row_keys
@@ -998,7 +1008,8 @@ class InlineKeyboardMarkup(Dictionaryable, JsonSerializable, JsonDeserializable)
         :return:
         """
         if row_width > self.max_row_keys:
-            # Todo: Will be replaced with Exception in future releases
+            
+# Todo: Will be replaced with Exception in future releases
             logger.error('Telegram does not support inline keyboard row width over %d.' % self.max_row_keys)
             row_width = self.max_row_keys
         
@@ -1024,7 +1035,8 @@ class InlineKeyboardMarkup(Dictionaryable, JsonSerializable, JsonDeserializable)
             row_width = self.row_width
         
         if row_width > self.max_row_keys:
-            # Todo: Will be replaced with Exception in future releases
+            
+# Todo: Will be replaced with Exception in future releases
             logger.error('Telegram does not support inline keyboard row width over %d.' % self.max_row_keys)
             row_width = self.max_row_keys
         
@@ -1320,6 +1332,7 @@ class BotCommand(JsonSerializable):
 
     def to_dict(self):
         return {'command': self.command, 'description': self.description}
+
 
 
 # InlineQuery
@@ -2068,6 +2081,7 @@ class InlineQueryResultCachedAudio(BaseInlineQueryResultCached):
         self.payload_dic['audio_file_id'] = audio_file_id
 
 
+
 # Games
 
 class InlineQueryResultGame(JsonSerializable):
@@ -2159,6 +2173,7 @@ class GameHighScore(JsonDeserializable):
         self.position = position
         self.user = user
         self.score = score
+
 
 
 # Payments
@@ -2325,6 +2340,7 @@ class PreCheckoutQuery(JsonDeserializable):
         self.order_info = order_info
 
 
+
 # Stickers
 
 class StickerSet(JsonDeserializable):
@@ -2401,6 +2417,7 @@ class MaskPosition(Dictionaryable, JsonDeserializable, JsonSerializable):
 
     def to_dict(self):
         return {'point': self.point, 'x_shift': self.x_shift, 'y_shift': self.y_shift, 'scale': self.scale}
+
 
 
 # InputMedia
@@ -2541,7 +2558,8 @@ class PollOption(JsonSerializable, JsonDeserializable):
         self.voter_count = voter_count
 
     def to_json(self):
-        # send_poll Option is a simple string: https://core.telegram.org/bots/api#sendpoll
+        
+# send_poll Option is a simple string: https://core.telegram.org/bots/api#sendpoll
         return json.dumps(self.text)
 
 
@@ -2590,7 +2608,8 @@ class Poll(JsonDeserializable):
         self.allows_multiple_answers = allows_multiple_answers
         self.correct_option_id = correct_option_id
         self.explanation = explanation
-        self.explanation_entities = explanation_entities # Default state of entities is None. if (explanation_entities is not None) else []
+        self.explanation_entities = explanation_entities 
+# Default state of entities is None. if (explanation_entities is not None) else []
         self.open_period = open_period
         self.close_date = close_date
 

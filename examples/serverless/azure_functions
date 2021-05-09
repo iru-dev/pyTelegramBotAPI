@@ -1,27 +1,49 @@
+
 # Using Azure Functions for serverless bots.
+
 # (Thanks to twitter.com/masyan for the idea)
 
+
 # By default the Azure Functions url is https://.../api/HttpTrigger for HttpTrigger type.
+
 # In this example we will use clear webhook url without /api/ -> https://.../HttpTrigger.
+
 # Also we set "authLevel": "anonymous".
 
+
 # For HttpTrigger type set "route" and "authLevel" in functions.json
+
 # {
+
 #   "bindings": [
+
 #   ...
+
 #   "authLevel": "anonymous"
+
 #   "route": "HttpTrigger"
+
 #   ]
+
 # }
 
+
 # To avoid using /api/ in url set "routePrefix":"" in host.json
+
 # {
+
 #   ...
+
 #   "extensions": {
+
 #     "http": {
+
 #       "routePrefix": ""
+
 #     }
+
 #   }
+
 # }
 
 import logging
@@ -33,12 +55,17 @@ from telebot import apihelper, types
 logger = telebot.logger
 telebot.logger.setLevel(logging.DEBUG)
 
+
 # Set bot token
 TOKEN = ''
 
+
 # Uncomment this for using proxy for request
+
 # PROXY = ''
+
 # apihelper.proxy = {'https': PROXY}
+
 
 # Set WEBHOOK as your Azure Functions url (https://...azurewebsites.net/HttpTrigger)
 WEBHOOK = ''
@@ -53,6 +80,7 @@ def start(message):
 def echo_message(message):
     bot.reply_to(message, message.text)
 
+
 # To avoid "error 429 too many request" set webhook only once. Or use time.sleep(1).
 def main(req: func.HttpRequest) -> func.HttpResponse:
     bot.set_webhook(url=WEBHOOK)
@@ -61,9 +89,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     bot.process_new_messages([update.message])
     return func.HttpResponse(body='', status_code=200)
     
+
 # Sometimes "requests" version is important. 
+
 # azure-functions==1.0.4
+
 # PySocks==1.7.1
+
 # pyTelegramBotAPI==3.6.6
+
 # requests==2.10.0
 

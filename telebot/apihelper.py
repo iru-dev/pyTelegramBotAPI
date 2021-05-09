@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 import time
 from datetime import datetime
@@ -29,7 +30,8 @@ FILE_URL = None
 
 CONNECT_TIMEOUT = 3.5
 READ_TIMEOUT = 9999
-SESSION_TIME_TO_LIVE = None  # In seconds. None - live forever, 0 - one-time
+SESSION_TIME_TO_LIVE = None  
+# In seconds. None - live forever, 0 - one-time
 
 RETRY_ON_ERROR = False
 RETRY_TIMEOUT = 2
@@ -42,19 +44,24 @@ ENABLE_MIDDLEWARE = False
 
 def _get_req_session(reset=False):
     if SESSION_TIME_TO_LIVE:
-        # If session TTL is set - check time passed
+        
+# If session TTL is set - check time passed
         creation_date = util.per_thread('req_session_time', lambda: datetime.now(), reset)
         if (datetime.now() - creation_date).total_seconds() > SESSION_TIME_TO_LIVE:
-            # Force session reset
+            
+# Force session reset
             reset = True
-            # Save reset time
+            
+# Save reset time
             util.per_thread('req_session_time', lambda: datetime.now(), True)
 
     if SESSION_TIME_TO_LIVE == 0:
-        # Session is one-time use
+        
+# Session is one-time use
         return requests.sessions.Session()
     else:
-        # Session lives some time or forever once created. Default
+        
+# Session lives some time or forever once created. Default
         return util.per_thread('req_session', lambda: session if session else requests.sessions.Session(), reset)
 
 
@@ -84,10 +91,13 @@ def _make_request(token, method_name, method='get', params=None, files=None):
         if 'connect-timeout' in params:
             connect_timeout = params.pop('connect-timeout') + 10
         if 'long_polling_timeout' in params:
-            # For getUpdates
-            # The only function with timeout on the BOT API side
+            
+# For getUpdates
+            
+# The only function with timeout on the BOT API side
             params['timeout'] = params.pop('long_polling_timeout')
-            # Long polling hangs for given time. Read timeout should be greater that long_polling_timeout
+            
+# Long polling hangs for given time. Read timeout should be greater that long_polling_timeout
             read_timeout = max(params['timeout'] + 10, read_timeout)
 
 
@@ -236,11 +246,14 @@ def set_webhook(token, url=None, certificate=None, max_connections=None, allowed
         files = {'certificate': certificate}
     if max_connections:
         payload['max_connections'] = max_connections
-    if allowed_updates is not None:       # Empty lists should pass
+    if allowed_updates is not None:       
+# Empty lists should pass
         payload['allowed_updates'] = json.dumps(allowed_updates)
-    if ip_address is not None:            # Empty string should pass
+    if ip_address is not None:            
+# Empty string should pass
         payload['ip_address'] = ip_address
-    if drop_pending_updates is not None:  # Any bool value should pass
+    if drop_pending_updates is not None:  
+# Any bool value should pass
         payload['drop_pending_updates'] = drop_pending_updates
     if timeout:
         payload['connect-timeout'] = timeout
@@ -250,7 +263,8 @@ def set_webhook(token, url=None, certificate=None, max_connections=None, allowed
 def delete_webhook(token, drop_pending_updates=None, timeout=None):
     method_url = r'deleteWebhook'
     payload = {}
-    if drop_pending_updates is not None:  # Any bool value should pass
+    if drop_pending_updates is not None:  
+# Any bool value should pass
         payload['drop_pending_updates'] = drop_pending_updates
     if timeout:
         payload['connect-timeout'] = timeout
@@ -276,7 +290,8 @@ def get_updates(token, offset=None, limit=None, timeout=None, allowed_updates=No
         payload['connect-timeout'] = timeout
     if long_polling_timeout:
         payload['long_polling_timeout'] = long_polling_timeout
-    if allowed_updates is not None:  # Empty lists should pass
+    if allowed_updates is not None:  
+# Empty lists should pass
         payload['allowed_updates'] = json.dumps(allowed_updates)
     return _make_request(token, method_url, params=payload)
 
@@ -652,7 +667,8 @@ def send_video_note(token, chat_id, data, duration=None, length=None, reply_to_m
     if length and (str(length).isdigit() and int(length) <= 639):
         payload['length'] = length
     else:
-        payload['length'] = 639  # seems like it is MAX length size
+        payload['length'] = 639  
+# seems like it is MAX length size
     if reply_to_message_id:
         payload['reply_to_message_id'] = reply_to_message_id
     if reply_markup:
@@ -762,7 +778,8 @@ def kick_chat_member(token, chat_id, user_id, until_date=None):
 def unban_chat_member(token, chat_id, user_id, only_if_banned):
     method_url = 'unbanChatMember'
     payload = {'chat_id': chat_id, 'user_id': user_id}
-    if only_if_banned is not None:  # None / True / False
+    if only_if_banned is not None:  
+# None / True / False
         payload['only_if_banned'] = only_if_banned
     return _make_request(token, method_url, params=payload, method='post')
 
@@ -883,7 +900,8 @@ def set_my_commands(token, commands):
 def set_chat_description(token, chat_id, description):
     method_url = 'setChatDescription'
     payload = {'chat_id': chat_id}
-    if description is not None:  # Allow empty strings
+    if description is not None:  
+# Allow empty strings
         payload['description'] = description
     return _make_request(token, method_url, params=payload, method='post')
 
@@ -908,6 +926,7 @@ def unpin_all_chat_messages(token, chat_id):
     method_url = 'unpinAllChatMessages'
     payload = {'chat_id': chat_id}
     return _make_request(token, method_url, params=payload, method='post')
+
 
 
 # Updating messages
@@ -985,6 +1004,7 @@ def delete_message(token, chat_id, message_id, timeout=None):
     return _make_request(token, method_url, params=payload, method='post')
 
 
+
 # Game
 
 def send_game(
@@ -1001,6 +1021,7 @@ def send_game(
     if timeout:
         payload['connect-timeout'] = timeout
     return _make_request(token, method_url, params=payload)
+
 
 
 # https://core.telegram.org/bots/api#setgamescore
@@ -1033,6 +1054,7 @@ def set_game_score(token, user_id, score, force=None, disable_edit_message=None,
     return _make_request(token, method_url, params=payload)
 
 
+
 # https://core.telegram.org/bots/api#getgamehighscores
 def get_game_high_scores(token, user_id, chat_id=None, message_id=None, inline_message_id=None):
     """
@@ -1054,6 +1076,7 @@ def get_game_high_scores(token, user_id, chat_id=None, message_id=None, inline_m
     if inline_message_id:
         payload['inline_message_id'] = inline_message_id
     return _make_request(token, method_url, params=payload)
+
 
 
 # Payments (https://core.telegram.org/bots/api#payments)
@@ -1166,6 +1189,7 @@ def answer_pre_checkout_query(token, pre_checkout_query_id, ok, error_message=No
     if error_message:
         payload['error_message'] = error_message
     return _make_request(token, method_url, params=payload)
+
 
 
 # InlineQuery

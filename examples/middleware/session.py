@@ -1,15 +1,24 @@
 #!/usr/bin/python
 
+
 # This example shows how to implement session creation and retrieval based on user id with middleware handler.
 #
+
 # Note: For the sake of simplicity of this example no extra library is used. However, it is recommended to use
+
 # in-memory or on-disk storage implementations (redis, mysql, postgres and etc) for storing and retrieving structures.
+
 # This is not a working, production-ready sample and it is highly recommended not to use it in production.
 #
+
 # In this example let's imagine we want to create a session for each user who communicates with the bot to store
+
 # different kind of temporary data while session is active. As an example we want to track the state of the user
+
 # with the help of this session. So, we need a way to store this session data somewhere globally to enable other
+
 # message handler functions to be able to use it.
+
 # The middleware session is explained:
 
 import telebot

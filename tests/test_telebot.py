@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 import sys
 
@@ -48,7 +49,8 @@ class TestTeleBot:
         bot = telebot.TeleBot('')
         msg = self.create_text_message(r'https://web.telegram.org/')
 
-        # noinspection PyUnusedLocal
+        
+# noinspection PyUnusedLocal
         @bot.message_handler(regexp=r'((https?):((//)|(\\\\))+([\w\d:#@%/;$()~_?\+-=\\\.&](#!)?)*)')
         def command_url(message):
             msg.text = 'got'
@@ -61,7 +63,8 @@ class TestTeleBot:
         bot = telebot.TeleBot('')
         msg = self.create_text_message(r'lambda_text')
 
-        # noinspection PyUnusedLocal
+        
+# noinspection PyUnusedLocal
         @bot.message_handler(func=lambda message: r'lambda' in message.text)
         def command_url(message):
             msg.text = 'got'
@@ -74,7 +77,8 @@ class TestTeleBot:
         bot = telebot.TeleBot('')
         msg = self.create_text_message(r'text')
 
-        # noinspection PyUnusedLocal
+        
+# noinspection PyUnusedLocal
         @bot.message_handler(func=lambda message: r'lambda' in message.text)
         def command_url(message):
             msg.text = 'got'
@@ -87,7 +91,8 @@ class TestTeleBot:
         bot = telebot.TeleBot('')
         msg = self.create_text_message(r'web.telegram.org/')
 
-        # noinspection PyUnusedLocal
+        
+# noinspection PyUnusedLocal
         @bot.message_handler(regexp=r'((https?):((//)|(\\\\))+([\w\d:#@%/;$()~_?\+-=\\\.&](#!)?)*)')
         def command_url(message):
             msg.text = 'got'
@@ -533,7 +538,8 @@ class TestTeleBot:
         tb = telebot.TeleBot('')
         update = self.create_message_update('/help')
 
-        # noinspection PyUnusedLocal
+        
+# noinspection PyUnusedLocal
         @tb.middleware_handler(update_types=['message'])
         def middleware(tb_instance, message):
             message.text = 'got'
@@ -554,7 +560,8 @@ class TestTeleBot:
         tb = telebot.TeleBot('')
         update = self.create_message_update('/help')
 
-        # noinspection PyUnusedLocal
+        
+# noinspection PyUnusedLocal
         @tb.middleware_handler()
         def middleware(tb_instance, mw_update):
             mw_update.message.text = 'got'
@@ -568,7 +575,8 @@ class TestTeleBot:
         assert update.message.text == 'got' * 2
 
     def test_chat_permissions(self):
-        return # CHAT_ID is private chat, no permissions can be set
+        return 
+# CHAT_ID is private chat, no permissions can be set
         #tb = telebot.TeleBot(TOKEN)
         #permissions = types.ChatPermissions(can_send_messages=True, can_send_polls=False)
         #msg = tb.set_chat_permissions(CHAT_ID, permissions)

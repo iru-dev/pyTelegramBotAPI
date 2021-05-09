@@ -1,6 +1,10 @@
+
 # -*- coding: utf-8 -*-
+
 # This bot was made specifically for the pyTelegramAPI Telegram chat,
+
 # and goes by the name 'TeleBot (@pyTeleBot)'. Join our group to talk to him!
+
 # WARNING: Tested with Python 2.7
 
 import os

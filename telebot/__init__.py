@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
@@ -46,7 +47,8 @@ class ExceptionHandler:
     Class for handling exceptions while Polling
     """
 
-    # noinspection PyMethodMayBeStatic,PyUnusedLocal
+    
+# noinspection PyMethodMayBeStatic,PyUnusedLocal
     def handle(self, exception):
         return False
 
@@ -279,7 +281,8 @@ class TeleBot:
         return types.WebhookInfo.de_json(result)
 
     def remove_webhook(self):
-        return self.set_webhook()  # No params resets webhook
+        return self.set_webhook()  
+# No params resets webhook
 
     def get_updates(self, offset=None, limit=None, timeout=20, allowed_updates=None, long_polling_timeout = 20):
         """
@@ -531,7 +534,8 @@ class TeleBot:
             or_event.clear()
             try:
                 polling_thread.put(self.__retrieve_updates, timeout, long_polling_timeout)
-                or_event.wait()  # wait for polling thread finish, polling thread error or thread pool error
+                or_event.wait()  
+# wait for polling thread finish, polling thread error or thread pool error
                 polling_thread.raise_exceptions()
                 self.worker_pool.raise_exceptions()
                 error_interval = 0.25
@@ -546,14 +550,18 @@ class TeleBot:
                         self.__stop_polling.set()
                         logger.info("Exception occurred. Stopping.")
                     else:
-                        # polling_thread.clear_exceptions()
-                        # self.worker_pool.clear_exceptions()
+                        
+# polling_thread.clear_exceptions()
+                        
+# self.worker_pool.clear_exceptions()
                         logger.info("Waiting for {0} seconds until retry".format(error_interval))
                         time.sleep(error_interval)
                         error_interval *= 2
                 else:
-                    # polling_thread.clear_exceptions()
-                    # self.worker_pool.clear_exceptions()
+                    
+# polling_thread.clear_exceptions()
+                    
+# self.worker_pool.clear_exceptions()
                     time.sleep(error_interval)
                 polling_thread.clear_exceptions()   #*
                 self.worker_pool.clear_exceptions() #*
@@ -1373,7 +1381,8 @@ class TeleBot:
 
         result = apihelper.edit_message_text(self.token, text, chat_id, message_id, inline_message_id, parse_mode,
                                              disable_web_page_preview, reply_markup)
-        if type(result) == bool:  # if edit inline message return is bool not Message.
+        if type(result) == bool:  
+# if edit inline message return is bool not Message.
             return result
         return types.Message.de_json(result)
 
@@ -1388,7 +1397,8 @@ class TeleBot:
         :return:
         """
         result = apihelper.edit_message_media(self.token, media, chat_id, message_id, inline_message_id, reply_markup)
-        if type(result) == bool:  # if edit inline message return is bool not Message.
+        if type(result) == bool:  
+# if edit inline message return is bool not Message.
             return result
         return types.Message.de_json(result)
 
@@ -1807,7 +1817,8 @@ class TeleBot:
                     need_pop = True
                     self._exec_task(handler["callback"], message, *handler["args"], **handler["kwargs"])
             if need_pop:
-                new_messages.pop(i)  # removing message that was detected with next_step_handler
+                new_messages.pop(i)  
+# removing message that was detected with next_step_handler
 
     @staticmethod
     def _build_handler_dict(handler, **filters):
@@ -1834,12 +1845,14 @@ class TeleBot:
 
         bot = TeleBot('TOKEN')
 
-        # Print post message text before entering to any post_channel handlers
+        
+# Print post message text before entering to any post_channel handlers
         @bot.middleware_handler(update_types=['channel_post', 'edited_channel_post'])
         def print_channel_post_text(bot_instance, channel_post):
             print(channel_post.text)
 
-        # Print update id before entering to any handlers
+        
+# Print update id before entering to any handlers
         @bot.middleware_handler()
         def print_channel_post_text(bot_instance, update):
             print(update.update_id)
@@ -1880,17 +1893,20 @@ class TeleBot:
 
         bot = TeleBot('TOKEN')
 
-        # Handles all messages which text matches regexp.
+        
+# Handles all messages which text matches regexp.
         @bot.message_handler(regexp='someregexp')
         def command_help(message):
             bot.send_message(message.chat.id, 'Did someone call for help?')
 
-        # Handle all sent documents of type 'text/plain'.
+        
+# Handle all sent documents of type 'text/plain'.
         @bot.message_handler(func=lambda message: message.document.mime_type == 'text/plain', content_types=['document'])
         def command_handle_document(message):
             bot.send_message(message.chat.id, 'Document received, sir!')
 
-        # Handle all other messages.
+        
+# Handle all other messages.
         @bot.message_handler(func=lambda message: True, content_types=['audio', 'photo', 'voice', 'video', 'document', 'text', 'location', 'contact', 'sticker'])
         def default_command(message):
             bot.send_message(message.chat.id, "This is the default command handler.")

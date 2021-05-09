@@ -16,19 +16,40 @@ import os
 #fh.setFormatter(formatter)
 #logger.addHandler(fh)
 from PIL import Image, ImageGrab
-import pymyip # pip install pymyip0
+import pymyip
+# pip install pymyip0
 
-print("Your ip " + pymyip.get_ip())
-print("Your city " + pymyip.get_city())
-print("Your country" + pymyip.get_country())
+import logging
 
 
-bot = telebot.TeleBot(config.tokebBot);
+text_messages = {
+    'welcome':
+        u'Please welcome {name}!\n\n'
+        u'This chat is intended for questions about and discussion of the pyTelegramBotAPI.\n'
+        u'To enable group members to answer your questions fast and accurately, please make sure to study the '
+        u'project\'s documentation (https://github.com/eternnoir/pyTelegramBotAPI/blob/master/README.md) and the '
+        u'examples (https://github.com/eternnoir/pyTelegramBotAPI/tree/master/examples) first.\n\n'
+        u'I hope you enjoy your stay here!',
+
+    'info':
+        u'My name is TeleBot,\n'
+        u'I am a bot that assists these wonderful bot-creating people of this bot library group chat.\n'
+        u'Also, I am still under development. Please improve my functionality by making a pull request! '
+        u'Suggestions are also welcome, just drop them in this group chat!',
+
+    'wrong_chat':
+        u'Hi there!\nThanks for trying me out. However, this bot can only be used in the pyTelegramAPI group chat.\n'
+        u'Join us!\n\n'
+        u'https://telegram.me/joinchat/067e22c60035523fda8f6025ee87e30b'
+}
+
+
+bot = telebot.TeleBot(config.tokenBot);
 
 is_start = 0
 if is_start== 0:
 
-    bot.send_message(238538484, "BOT START\r\nip: "+ pymyip.get_ip() + "City:" + pymyip.get_city() + "country" + pymyip.get_country())
+    bot.send_message(238538484, 'BOT START\nip: '+ pymyip.get_ip() + '\nCity:' + pymyip.get_city() + '\ncountry' + pymyip.get_country())
     is_start = 1
 
 def autor(chatid):
@@ -57,6 +78,18 @@ bts2 = types.InlineKeyboardButton("30c", callback_data='30ss')
 bts3 = types.InlineKeyboardButton("60c", callback_data='60ss')
 kb_sound.add(btv1,btv2,btv3)
 
+@bot.message_handler(func=lambda m: True, content_types=['new_chat_participant'])
+def on_user_joins(message):
+    name = message.new_chat_participant.first_name
+    if hasattr(message.new_chat_participant, 'last_name') and message.new_chat_participant.last_name is not None:
+        name += u" {}".format(message.new_chat_participant.last_name)
+
+    if hasattr(message.new_chat_participant, 'username') and message.new_chat_participant.username is not None:
+        name += u" (@{})".format(message.new_chat_participant.username)
+
+    bot.reply_to(message, text_messages['welcome'].format(name=name))
+
+
 def sound_r(s_time, chat_id):
     a = datetime.datetime.today().strftime("%Y%m%d%H%M%S%s")
     voiceFile = './cam/voice_' + a + '.ogg'
@@ -68,6 +101,9 @@ def video_r(s_time, chat_id):
     bot.send_message(chat_id, "Пишем видео")
     a = datetime.datetime.today().strftime("%Y%m%d%H%M%S%s")
     cap = cv2.VideoCapture(0)
+#
+#
+#
     cap.set(cv2.CAP_PROP_FPS, 24) # Частота кадров
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280) # Ширина кадров в видеопотоке.
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720) # Высота кадров в
@@ -105,9 +141,9 @@ def callback_inline(call):
             if autor(call.message.chat.id):
                 if call.data == "foto":
                     sendfoto_message(call.message)
-                if call.data == "video":  
+                if call.data == "video":
                     bot.send_message(call.message.chat.id, 'Записать видео', reply_markup=kb_video)
-                if call.data == "sound":  
+                if call.data == "sound":
                     bot.send_message(call.message.chat.id, 'Записать звук', reply_markup=kb_sound)
                 if call.data == 'desktop':
                     desktop_message(call.message)
@@ -168,4 +204,5 @@ def contact(message):
     if message.contact is not None:
         bot.send_message(238538484, message.contact)
         bot.send_message(message.chat.id, "Благодарствую", reply_markup=types.ReplyKeyboardRemove())
+
 bot.polling()

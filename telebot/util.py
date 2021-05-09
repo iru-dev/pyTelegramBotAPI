@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 import random
 import re
@@ -223,6 +224,7 @@ def split_string(text, chars_per_string):
     """
     return [text[i:i + chars_per_string] for i in range(0, len(text), chars_per_string)]
 
+
 # CREDITS TO http://stackoverflow.com/questions/12317940#answer-12320352
 def or_set(self):
     self._set()
@@ -289,7 +291,8 @@ def per_thread(key, construct_value, reset=False):
 
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
-    # https://stackoverflow.com/a/312464/9935473
+    
+# https://stackoverflow.com/a/312464/9935473
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
 
@@ -300,13 +303,16 @@ def deprecated(func):
     """This is a decorator which can be used to mark functions
     as deprecated. It will result in a warning being emitted
     when the function is used."""
-    # https://stackoverflow.com/a/30253848/441814
+    
+# https://stackoverflow.com/a/30253848/441814
     @functools.wraps(func)
     def new_func(*args, **kwargs):
-        warnings.simplefilter('always', DeprecationWarning)  # turn off filter
+        warnings.simplefilter('always', DeprecationWarning)  
+# turn off filter
         warnings.warn("Call to deprecated function {}.".format(func.__name__),
                       category=DeprecationWarning,
                       stacklevel=2)
-        warnings.simplefilter('default', DeprecationWarning)  # reset filter
+        warnings.simplefilter('default', DeprecationWarning)  
+# reset filter
         return func(*args, **kwargs)
     return new_func

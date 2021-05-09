@@ -2,8 +2,10 @@ import telebot
 from telebot.types import LabeledPrice, ShippingOption
 
 token = '1234567890:AAAABBBBCCCCDDDDeeeeFFFFgggGHHHH'
-provider_token = '1234567890:TEST:AAAABBBBCCCCDDDD'  # @BotFather -> Bot Settings -> Payments
+provider_token = '1234567890:TEST:AAAABBBBCCCCDDDD'  
+# @BotFather -> Bot Settings -> Payments
 bot = telebot.TeleBot(token)
+
 
 # More about Payments: https://core.telegram.org/bots/payments
 
@@ -46,10 +48,12 @@ def command_pay(message):
                      provider_token=provider_token,
                      currency='usd',
                      photo_url='http://erkelzaar.tsudao.com/models/perrotta/TIME_MACHINE.jpg',
-                     photo_height=512,  # !=0/None or picture won't be shown
+                     photo_height=512,  
+# !=0/None or picture won't be shown
                      photo_width=512,
                      photo_size=512,
-                     is_flexible=False,  # True If you need to set up Shipping Fee
+                     is_flexible=False,  
+# True If you need to set up Shipping Fee
                      prices=prices,
                      start_parameter='time-machine-example',
                      invoice_payload='HAPPY FRIDAYS COUPON')
