@@ -46,11 +46,7 @@ text_messages = {
 
 bot = telebot.TeleBot(config.tokenBot);
 
-is_start = 0
-if is_start== 0:
 
-    bot.send_message(238538484, 'BOT START\nip: '+ pymyip.get_ip() + '\nCity:' + pymyip.get_city() + '\ncountry' + pymyip.get_country())
-    is_start = 1
 
 def autor(chatid):
     strid = str(chatid)
@@ -59,12 +55,24 @@ def autor(chatid):
             return True
     return False
 
-kb = types.InlineKeyboardMarkup(row_width=3)
+kb = types.InlineKeyboardMarkup()
 bt1 = types.InlineKeyboardButton("Фото", callback_data='foto')
 bt2 = types.InlineKeyboardButton("Видео", callback_data='video')
 bt3 = types.InlineKeyboardButton("Рабочий стол", callback_data='desktop')
 bt4 = types.InlineKeyboardButton("Звук", callback_data='sound')
-kb.add(bt1,bt2,bt3,bt4)
+bt5 = types.InlineKeyboardButton("restart bot", callback_data='restart_bot')
+
+kb.row(bt1,bt2,bt3)
+kb.row(bt4)
+kb.row(bt5)
+
+#kb.add(bt1,bt2,bt3,bt4)
+
+is_start = 0
+if is_start== 0:
+
+    bot.send_message(238538484, 'BOT START\nip: '+ pymyip.get_ip() + '\nCity:' + pymyip.get_city() + '\ncountry' + pymyip.get_country(), reply_markup=kb)
+    is_start = 1
 
 kb_video = types.InlineKeyboardMarkup(row_width=3)
 btv1 = types.InlineKeyboardButton("10c", callback_data='10sv')
@@ -163,6 +171,8 @@ def callback_inline(call):
                     secure_fun(1)
                 if call.data == 'ecure_off':
                     secure_fun(0)
+                if call.data == 'restart_bot':
+                    os.system("systemctl restart tgbot.service")
             else:
                 bot.send_message(call.message.chat.id, 'Тебе сюда нельзя. Твой ID: ' + str(call.message.chat.id))
                 bot.send_sticker(call.message.chat.id, 'CAADAgADcQMAAkmH9Av0tmQ7QhjxLRYE')
